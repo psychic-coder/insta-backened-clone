@@ -1,0 +1,46 @@
+<% include ./partials/header.ejs %>
+
+<!--we are taking the help of axios-->
+    <div class="w-full min-h-screen bg-zinc-900 px-4 py-5">
+        <div class="border-2 border-zinc-800 flex items-center justify-between px-2 py-1 rounded-md">
+            <i class="text-white ri-search-line"></i>
+            <input id="inputusername" class="input ml-1 w-full bg-zinc-900 outline-none text-zinc-400" 
+            type="text"
+                placeholder="search username">
+        </div>
+        <div class="users">
+        </div>
+    </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<!--whenever we'll write anything a request will be sent to the backened , this request is sent with the help of axios
+-->
+<!--whatever answer we have sent from their , it will be received in the form of data-->
+<!--over their we wrote clutter="" so that it can empty the value of clutter before we search a new value  -->
+<script>
+   const inp= document.querySelector("#inputusername")
+   let clutter=""
+   inp.addEventListener("input",function(){
+        axios.get(`/search/${inp.value}`).then(function(data){
+            clutter="";
+            data.data.forEach((item) => {
+                clutter+=`<a href="/profile/${item.username}" class="outline-none">
+            <div class="text-white flex items-center gap-2 mt-5">
+                <div class="image w-[11vw] h-[11vw] rounded-full bg-sky-100 overflow-hidden">
+                    <img src="/images/uploads/${item.picture}" alt="">
+                    </div>
+                <div class="text">
+                    <h3>${item.username}</h3>
+                    <h4 class="text-xs opacity-30 leading-none">${item.name}</h4>
+                </div>
+            </div>            
+        </a>`
+            });
+            document.querySelector(".users").innerHTML=clutter;
+        })
+     })
+     
+</script>
+<% include ./partials/footer.ejs %>
